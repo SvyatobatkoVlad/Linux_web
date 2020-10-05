@@ -2,3 +2,5 @@ github.com/gorilla/mux v1.8.0 h1:i40aqfkR1h2SlN9hojwV5ZA91wcXFOvkdNIeFDP5koI=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
 github.com/lib/pq v1.8.0 h1:9xohqzkUwzR4Ga4ivdTcawVS89YSDVxXMa3xJX3cGzg=
 github.com/lib/pq v1.8.0/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
+github.com/maxchagin/go-memorycache-example v0.0.0-20180524131321-f4bebbb0aa08 h1:EbVD7s3BmMSi2tqnOJpV57B5r1htwNt6LjK6kV7Youo=
+github.com/maxchagin/go-memorycache-example v0.0.0-20180524131321-f4bebbb0aa08/go.mod h1:xB67hrlW1HhokmG8hY9j5X1XS3ptuycWh+rsHBRYXSw=

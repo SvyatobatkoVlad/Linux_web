@@ -18,7 +18,7 @@ type App struct {
 }
 
 func (a *App) Initialize(user, password, dbname, host, port, sslmode string) {
-	fmt.Println("Test")
+	fmt.Println("test")
 	connectionString :=
 		fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=%s", user, password, dbname, host, port, sslmode)
 
@@ -29,6 +29,7 @@ func (a *App) Initialize(user, password, dbname, host, port, sslmode string) {
 	}
 
 	a.Router = mux.NewRouter()
+	a.initializeRoutes()
 }
 
 func (a *App) Run(addr string) {
@@ -53,7 +54,6 @@ func (a *App) getProduct(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
 	respondWithJSON(w, http.StatusOK, p)
 }
 
