@@ -4,12 +4,14 @@ import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type App struct {
@@ -148,10 +150,62 @@ func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, map[string]string{"result": "success"})
 }
 
+func (a *App) Login(w http.ResponseWriter, r *http.Request) {
+	body, err := ioutil.ReadAll(r.Body)
+	if err != nil {
+		ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	user := User{}
+	err = json.Unmarshal(body, &user)
+	if err != nil {
+		ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	user.Prepare()
+	err = user.Validate("login")
+	if err != nil {
+		ERROR(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+	token, err := a.SignIn(user.Email, user.Password)
+	fmt.Println("tesr autorization2")
+	if err != nil {
+		formattedError := FormatError(err.Error())
+		fmt.Println("tesr autorization3")
+		ERROR(w, http.StatusUnprocessableEntity, formattedError)
+		return
+	}
+	fmt.Println("tesr autorization4")
+	JSON(w, http.StatusOK, token)
+}
+
+func (a *App) SignIn(email, password string) (string, error) {
+
+	var err error
+
+	user := User{}
+	fmt.Println("tesr autorization1")
+	err = a.DB.QueryRow(`select * from "Users" where "Email"= $1`, email).Scan(&user.ID, &user.Nickname, &user.Email, &user.Password)
+	fmt.Println(err)
+	if err != nil {
+		return "", err
+	}
+	err = VerifyPassword(user.Password, password)
+	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
+		return "", err
+	}
+	return CreateToken(user.ID)
+}
+
 func (a *App) initializeRoutes() {
+
+	a.Router.HandleFunc("/login", SetMiddlewareJSON(a.Login)).Methods("POST")
+
 	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
 	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.getProduct).Methods("GET")
+	a.Router.HandleFunc("/product/{id:[0-9]+}", SetMiddlewareAuthentication(a.getProduct)).Methods("GET")
 	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.deleteProduct).Methods("DELETE")
+	a.Router.HandleFunc("/product/{id:[0-9]+}", SetMiddlewareAuthentication(a.deleteProduct)).Methods("DELETE")
 }

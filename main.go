@@ -3,6 +3,7 @@ package main
 import "fmt"
 
 var (
+	API_SECRET = "123532"
 	dbUser     = "postgres"
 	dbPassword = "root"
 	dbName     = "web"
