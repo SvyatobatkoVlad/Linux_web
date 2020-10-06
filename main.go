@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 var (
 	API_SECRET = "123532"
 	dbUser     = "postgres"
@@ -13,10 +11,16 @@ var (
 )
 
 func main() {
-	fmt.Println(dbUser, dbPassword, dbName, dbHost, dbPort, dbSLLMode)
+	/*
+
+			I am using windows so env varieble doesn't work!
+
+			a.Initialize(
+		        os.Getenv("APP_DB_USERNAME"),
+		        os.Getenv("APP_DB_PASSWORD"),
+				os.Getenv("APP_DB_NAME"))
+	*/
 	a := App{}
-
 	a.Initialize(dbUser, dbPassword, dbName, dbHost, dbPort, dbSLLMode)
-
 	a.Run(":8080")
 }
