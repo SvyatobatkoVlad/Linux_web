@@ -58,6 +58,12 @@ For testing API
 go test -v
 ```
 
-## Docker and Docker-compose
+## Docker 
+
+```
+docker build -t main .
+
+docker run --name main -d --rm -p 8080:8080 main
+```
 
 
