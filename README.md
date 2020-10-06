@@ -58,12 +58,43 @@ For testing API
 go test -v
 ```
 
+## Automated testing with Postman
+
+ 
+```
+pm.test("Status test", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("response must be valid and have a body", function () {
+     pm.response.to.be.ok;
+     pm.response.to.be.withBody;
+     pm.response.to.be.json;
+});
+
+pm.test("Not failing"), function() {
+    pm.expect(true).to.eql(false);
+};
+```
+
+![](images/PostmanTest.png)
+
 ## Docker 
+
+Docker builds and runs the application but not the database ((
 
 ```
 docker build -t main .
 
 docker run --name main -d --rm -p 8080:8080 main
+```
+
+## Docker-compose
+
+Docker-copmpose builds and runs the application but not the database ((
+
+```
+docker-compose up -d
 ```
 
 
