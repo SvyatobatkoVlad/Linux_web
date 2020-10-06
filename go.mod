@@ -8,6 +8,6 @@ require (
 	github.com/golangci/golangci-lint v1.26.0 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.8.0
-	github.com/maxchagin/go-memorycache-example v0.0.0-20180524131321-f4bebbb0aa08
-	golang.org/x/crypto v0.0.0-20201002170205-7f63de1d35b0
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
+
 )

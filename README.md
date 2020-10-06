@@ -20,6 +20,8 @@
 
 - fetch a list of all existing books: GET to /books
 
+![](images/getBooks.png)
+
 ## Authorization with JWT
 
 - Authorization user: POST to /login
@@ -27,12 +29,16 @@
 ## Linter
 For testing Linter
 
+```
 golangci-lint run 
+```
 
 ## Tests for the API
 For testing API
 
+```
 go test -v
+```
 
 ## Docker and Docker-compose
 

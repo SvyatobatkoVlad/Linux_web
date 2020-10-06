@@ -38,19 +38,19 @@ func (a *App) Run(addr string) {
 	log.Fatal(http.ListenAndServe(":8080", a.Router))
 }
 
-func (a *App) getProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) getBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
+		respondWithError(w, http.StatusBadRequest, "Invalid book ID")
 		return
 	}
 
-	p := product{ID: id}
-	if err := p.getProduct(a.DB); err != nil {
+	p := book{ID: id}
+	if err := p.getBook(a.DB); err != nil {
 		switch err {
 		case sql.ErrNoRows:
-			respondWithError(w, http.StatusNotFound, "Product not found")
+			respondWithError(w, http.StatusNotFound, "Book not found")
 		default:
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
@@ -71,7 +71,7 @@ func respondWithJSON(w http.ResponseWriter, code int, payload interface{}) {
 	w.Write(response)
 }
 
-func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
+func (a *App) getBooks(w http.ResponseWriter, r *http.Request) {
 	count, _ := strconv.Atoi(r.FormValue("count"))
 	start, _ := strconv.Atoi(r.FormValue("start"))
 
@@ -82,17 +82,17 @@ func (a *App) getProducts(w http.ResponseWriter, r *http.Request) {
 		start = 0
 	}
 
-	products, err := getProductss(a.DB, start, count)
+	books, err := getBookss(a.DB, start, count)
 	if err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
 
-	respondWithJSON(w, http.StatusOK, products)
+	respondWithJSON(w, http.StatusOK, books)
 }
 
-func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
-	var p product
+func (a *App) createBook(w http.ResponseWriter, r *http.Request) {
+	var p book
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid request payload")
@@ -100,7 +100,7 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if err := p.createProduct(a.DB); err != nil {
+	if err := p.createBook(a.DB); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -108,15 +108,15 @@ func (a *App) createProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusCreated, p)
 }
 
-func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) updateBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid product ID")
+		respondWithError(w, http.StatusBadRequest, "Invalid book ID")
 		return
 	}
 
-	var p product
+	var p book
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&p); err != nil {
 		respondWithError(w, http.StatusBadRequest, "Invalid resquest payload")
@@ -125,7 +125,7 @@ func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	p.ID = id
 
-	if err := p.updateProduct(a.DB); err != nil {
+	if err := p.updateBook(a.DB); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -133,16 +133,16 @@ func (a *App) updateProduct(w http.ResponseWriter, r *http.Request) {
 	respondWithJSON(w, http.StatusOK, p)
 }
 
-func (a *App) deleteProduct(w http.ResponseWriter, r *http.Request) {
+func (a *App) deleteBook(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		respondWithError(w, http.StatusBadRequest, "Invalid Product ID")
+		respondWithError(w, http.StatusBadRequest, "Invalid Book ID")
 		return
 	}
 
-	p := product{ID: id}
-	if err := p.deleteProduct(a.DB); err != nil {
+	p := book{ID: id}
+	if err := p.deleteBook(a.DB); err != nil {
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -203,9 +203,9 @@ func (a *App) initializeRoutes() {
 
 	a.Router.HandleFunc("/login", SetMiddlewareJSON(a.Login)).Methods("POST")
 
-	a.Router.HandleFunc("/products", a.getProducts).Methods("GET")
-	a.Router.HandleFunc("/product", a.createProduct).Methods("POST")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", SetMiddlewareAuthentication(a.getProduct)).Methods("GET")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", a.updateProduct).Methods("PUT")
-	a.Router.HandleFunc("/product/{id:[0-9]+}", SetMiddlewareAuthentication(a.deleteProduct)).Methods("DELETE")
+	a.Router.HandleFunc("/books", a.getBooks).Methods("GET")
+	a.Router.HandleFunc("/book", a.createBook).Methods("POST")
+	a.Router.HandleFunc("/book/{id:[0-9]+}", SetMiddlewareAuthentication(a.getBook)).Methods("GET")
+	a.Router.HandleFunc("/book/{id:[0-9]+}", a.updateBook).Methods("PUT")
+	a.Router.HandleFunc("/book/{id:[0-9]+}", SetMiddlewareAuthentication(a.deleteBook)).Methods("DELETE")
 }

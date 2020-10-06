@@ -11,7 +11,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type product struct {
+type book struct {
 	ID    int     `json:"id"`
 	Name  string  `json:"name"`
 	Price float64 `json:"price"`
@@ -26,28 +26,28 @@ type User struct {
 	UpdatedAt time.Time `json:"updated_at"`
 }
 
-func (p *product) getProduct(db *sql.DB) error {
-	return db.QueryRow(`SELECT "Name", "Price" FROM "Product" WHERE "id"=$1`,
+func (p *book) getBook(db *sql.DB) error {
+	return db.QueryRow(`SELECT "Name", "Price" FROM "Book" WHERE "id"=$1`,
 		p.ID).Scan(&p.Name, &p.Price)
 }
 
-func (p *product) updateProduct(db *sql.DB) error {
+func (p *book) updateBook(db *sql.DB) error {
 	_, err :=
-		db.Exec(`UPDATE public."Product" SET "Name"=$1, "Price"=$2 WHERE "id"=$3`,
+		db.Exec(`UPDATE public."Book" SET "Name"=$1, "Price"=$2 WHERE "id"=$3`,
 			p.Name, p.Price, p.ID)
 
 	return err
 }
 
-func (p *product) deleteProduct(db *sql.DB) error {
-	_, err := db.Exec(`DELETE FROM public."Product" WHERE "id"=$1`, p.ID)
+func (p *book) deleteBook(db *sql.DB) error {
+	_, err := db.Exec(`DELETE FROM public."Book" WHERE "id"=$1`, p.ID)
 
 	return err
 }
 
-func (p *product) createProduct(db *sql.DB) error {
+func (p *book) createBook(db *sql.DB) error {
 	err := db.QueryRow(
-		"INSERT INTO product(name, price) VALUES($1, $2) RETURNING id",
+		"INSERT INTO book(name, price) VALUES($1, $2) RETURNING id",
 		p.Name, p.Price).Scan(&p.ID)
 
 	if err != nil {
@@ -57,9 +57,9 @@ func (p *product) createProduct(db *sql.DB) error {
 	return nil
 }
 
-func getProductss(db *sql.DB, start, count int) ([]product, error) {
+func getBookss(db *sql.DB, start, count int) ([]book, error) {
 	rows, err := db.Query(
-		`SELECT "id", "Name",  "Price" FROM "Product" LIMIT ALL OFFSET 0`)
+		`SELECT "id", "Name",  "Price" FROM "Book" LIMIT ALL OFFSET 0`)
 
 	if err != nil {
 		return nil, err
@@ -67,17 +67,17 @@ func getProductss(db *sql.DB, start, count int) ([]product, error) {
 
 	defer rows.Close()
 
-	products := []product{}
+	books := []book{}
 
 	for rows.Next() {
-		var p product
+		var p book
 		if err := rows.Scan(&p.ID, &p.Name, &p.Price); err != nil {
 			return nil, err
 		}
-		products = append(products, p)
+		books = append(books, p)
 	}
 
-	return products, nil
+	return books, nil
 }
 
 func (u *User) Prepare() {
