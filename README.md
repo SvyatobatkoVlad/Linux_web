@@ -12,11 +12,19 @@
 # CRUD of Books
 - create a new book: POST to /book
 
+![](images/createBook.png)
+
 - delete an existing book: DELETE to /book/{id}
+
+![](images/deleteBook.png)
 
 - update an existing book: PUT to /book/{id}
 
+![](images/updateBook.png)
+
 - fetch an existing book: GET to /book/{id}
+
+![](images/getBook.png)
 
 - fetch a list of all existing books: GET to /books
 
@@ -25,6 +33,16 @@
 ## Authorization with JWT
 
 - Authorization user: POST to /login
+
+   - Authorization get Token
+
+   ![](images/authorizationGetToken.png)
+
+   - Authorization set Token
+
+   ![](images/authorizationSetToken.png)
+
+
 
 ## Linter
 For testing Linter
