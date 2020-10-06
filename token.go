@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -52,6 +51,7 @@ func ExtractToken(r *http.Request) string {
 	return ""
 }
 
+/*
 func ExtractTokenID(r *http.Request) (uint32, error) {
 
 	tokenString := ExtractToken(r)
@@ -74,6 +74,7 @@ func ExtractTokenID(r *http.Request) (uint32, error) {
 	}
 	return 0, nil
 }
+*/
 
 //Pretty display the claims licely in the terminal
 func Pretty(data interface{}) {

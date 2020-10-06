@@ -5,6 +5,7 @@ go 1.15
 require (
 	github.com/badoux/checkmail v1.2.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/golangci/golangci-lint v1.26.0 // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/lib/pq v1.8.0
 	github.com/maxchagin/go-memorycache-example v0.0.0-20180524131321-f4bebbb0aa08
